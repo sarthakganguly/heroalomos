@@ -14,7 +14,7 @@ Well, you need to google this guy - Hero Alom and research a bit about him. If h
 
 Filename: bootlite.bin
 
-`bits 16            ; Set code generation to 16-bit mode
+```bits 16            ; Set code generation to 16-bit mode
 org 0x7c00         ; Set the origin of the code to 0x7c00 (the location where boot sector is loaded)
 
 boot:
@@ -36,7 +36,7 @@ hello: db "Hello world, this is the lighter version of a 16 bit HAOS", 0  ; Defi
 
 times 510 - ($-$$) db 0  ; Fill the remaining bytes in the boot sector with zeros
 dw 0xaa55                 ; Boot signature to mark the sector as bootable
-`
+```
 The code starts at the label boot.
 - It sets up the SI register to point to the memory location of the string "Hello world...".
 - Then, it enters a loop where it loads a byte from the memory location pointed by SI into the AL register using lodsb, checks if it's null-terminated (end of the string), prints the character using BIOS interrupt 0x10 if it's not null, and repeats until it reaches the end of the string.
