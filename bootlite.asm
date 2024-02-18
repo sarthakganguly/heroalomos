@@ -1,21 +1,22 @@
-bits 16			; mentioning that this is 16 bit code
-org 0x7c00		; tell NASM to output at offset 0x7c00
+bits 16            ; Set code generation to 16-bit mode
+org 0x7c00         ; Set the origin of the code to 0x7c00 (the location where boot sector is loaded)
 
 boot:
-	mov si, hello	;point si register to hello label memory location
-	mov ah,0x0e	;0x0e = write character in tty mode
+    mov si, hello  ; Load the memory location of the string "hello" into SI register
+    mov ah, 0x0e   ; Set AH register to 0x0e (write character in tty mode)
+
 .loop:
-	lodsb
-	or al,al	;check if al == 0
-	jz halt		;if al == 0 jump to halt
-	int 0x10	;run BIOS interrupt 0x10 - video
-	jmp .loop	;jump to loop label
+    lodsb          ; Load byte at address pointed by SI into AL and increment SI
+    or al, al      ; Logical OR operation of AL with itself (checks if AL is zero)
+    jz halt        ; If AL is zero (end of string), jump to halt
+    int 0x10       ; Call BIOS interrupt 0x10 (video services) to print character in AL
+    jmp .loop      ; Jump back to loop to process the next character
+
 halt:
-	cli		;clear interrupt flag
-	hlt		;halt execution
+    cli            ; Clear interrupt flag to disable interrupts
+    hlt            ; Halt CPU execution
 
-hello: db "Hello world, this is the lighter version of a 16 bit HAOS",0
+hello: db "Hello world, this is the lighter version of a 16 bit HAOS", 0  ; Define a null-terminated string "hello"
 
-times 510 - ($-$$) db 0	;pad remaining bytes with 0
-dw 0xaa55		;mark bootloader as bootable
-
+times 510 - ($-$$) db 0  ; Fill the remaining bytes in the boot sector with zeros
+dw 0xaa55                 ; Boot signature to mark the sector as bootable
